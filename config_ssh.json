@@ -1,0 +1,8 @@
+{
+    "connection_type": "ssh",
+    "host": "192.168.1.100",
+    "username": "myuser",
+    "password": "mypassword",
+    "directory": "/var/log",
+    "file_extensions": [".log", ".txt", ".conf"]
+}
