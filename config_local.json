@@ -1,0 +1,5 @@
+{
+    "connection_type": "local",
+    "directory": "/home/user/documents",
+    "file_extensions": [".txt", ".pdf", ".doc", ".jpg"]
+}
