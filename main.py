@@ -142,6 +142,7 @@ class FileCounter:
         """SSH를 통한 원격 파일시스템에서 파일 카운트"""
         file_counts = {ext: 0 for ext in extensions}
         total_files = 0
+        file_list = []
         
         # 총 디렉터리 수 계산
         total_dirs = self.count_directories_ssh(directory)
@@ -162,6 +163,8 @@ class FileCounter:
                         if file_ext in extensions:
                             file_counts[file_ext] += 1
                             total_files += 1
+
+                            file_list.append(item_path)
                             
             except (PermissionError, FileNotFoundError, OSError) as e:
                 print(f"\n경고: {path} 접근 불가 - {e}")
@@ -169,7 +172,7 @@ class FileCounter:
         with tqdm(total=total_dirs, desc="원격 디렉터리 스캔 중", unit="dirs") as pbar:
             recursive_search(directory, pbar)
         
-        return file_counts, total_files
+        return file_counts, total_files, file_list
     
     def run(self, config_file: str = "config.json") -> None:
         """메인 실행 함수"""
@@ -192,7 +195,7 @@ class FileCounter:
         try:
             if connection_type == 'ssh':
                 self.connect_ssh()
-                file_counts, total_files = self.count_files_ssh(directory, extensions)
+                file_counts, total_files, file_list = self.count_files_ssh(directory, extensions)
                 self.disconnect_ssh()
             else:
                 file_counts, total_files, file_list = self.count_files_local(directory, extensions)
