@@ -197,4 +197,19 @@ def create_sample_config():
 
 def main():
     """메인 함수"""
-    parser = argparse.ArgumentPars
+    parser = argparse.ArgumentParser(description="파일시스템 디렉터리 파일 카운터")
+    parser.add_argument(
+        '--config', 
+        default='config.json',
+        help='설정 파일 경로 (기본값: config.json)'
+    )
+    
+    args = parser.parse_args()
+    
+    # 파일 카운터 실행
+    counter = FileCounter(args.config)
+    counter.run()
+
+
+if __name__ == "__main__":
+    main()
