@@ -114,6 +114,7 @@ class FileCounter:
         """로컬 파일시스템에서 파일 카운트"""
         file_counts = {ext: 0 for ext in extensions}
         total_files = 0
+        file_list = []
         
         # 총 디렉터리 수 계산
         total_dirs = self.count_directories_local(directory)
@@ -127,12 +128,15 @@ class FileCounter:
                         if file_ext in extensions:
                             file_counts[file_ext] += 1
                             total_files += 1
+
+                            full_path = Path(root)/file
+                            file_list.append(str(full_path))
             except PermissionError as e:
                 print(f"권한 오류: {e}")
             except Exception as e:
                 print(f"오류 발생: {e}")
         
-        return file_counts, total_files
+        return file_counts, total_files, file_list
     
     def count_files_ssh(self, directory: str, extensions: List[str]) -> Tuple[Dict[str, int], int]:
         """SSH를 통한 원격 파일시스템에서 파일 카운트"""
@@ -191,7 +195,7 @@ class FileCounter:
                 file_counts, total_files = self.count_files_ssh(directory, extensions)
                 self.disconnect_ssh()
             else:
-                file_counts, total_files = self.count_files_local(directory, extensions)
+                file_counts, total_files, file_list = self.count_files_local(directory, extensions)
             
             # 결과 출력
             print("\n" + "=" * 60)
@@ -204,6 +208,7 @@ class FileCounter:
             print("-" * 60)
             print(f"{'총 파일 수':>15} : {total_files:>8,}개")
             print("=" * 60)
+            print("file_list = ", file_list)
             
         except KeyboardInterrupt:
             print("\n\n프로그램이 사용자에 의해 중단되었습니다.")
